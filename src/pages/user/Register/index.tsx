@@ -26,19 +26,21 @@ const Register: React.FC = () => {
       if (id) {
         const defaultLoginSuccessMessage = '注册成功！';
         message.success(defaultLoginSuccessMessage);
-
         /** 此方法会跳转到 redirect 参数所在的位置 */
         if (!history) return;
         const {query} = history.location;
-        history.push({
-          pathname: '/user/login',
-          query,
-        });
+        const {redirect} = query as {
+            redirect: string;
+        };
+        history.push(redirect || '/');
         return;
       }
+      // else{
+      //   throw new Error(res.description)
+      // }
     } catch (error: any) {
       const defaultLoginFailureMessage = '注册失败，请重试！';
-      message.error(defaultLoginFailureMessage);
+      message.error(error.message ??  defaultLoginFailureMessage);
     }
   };
 
@@ -52,7 +54,7 @@ const Register: React.FC = () => {
             }
           }}
           logo={<img alt="logo" src={SYSTEM_LOGO}/>}
-          title="编程导航知识星球"
+          title="佩鲁用户中心"
           subTitle={<a href={PLANET_LINK} target="_blank" rel="noreferrer">最好的编程学习知识圈子</a>}
           initialValues={{
             autoLogin: true,
